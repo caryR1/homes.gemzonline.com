@@ -1,0 +1,96 @@
+/* Homes by GemzOnline — design system
+   Tokens extend the theme's own green palette (color1/color2/color3) rather than
+   replacing it, add one warm accent (cedar) for contrast, and use the theme's
+   already-bundled local fonts so nothing loads externally. */
+:root{
+  --thb-ink:#10190F;
+  --thb-white:#FFFFFF;
+  --thb-pine:#3F8353;
+  --thb-forest:#193421;
+  --thb-mint:#E4F6E2;
+  --thb-spring:#A2E75B;
+  --thb-cedar:#E8A33D;
+  --thb-cedar-ink:#8A5A1D;
+  --thb-line:#CFE3D2;
+  --thb-font-display: var(--wp--preset--font-family--manrope), 'Helvetica Neue', Arial, sans-serif;
+  --thb-font-body: var(--wp--preset--font-family--dmsans), -apple-system, BlinkMacSystemFont, sans-serif;
+  --thb-font-mono: var(--wp--preset--font-family--ibm-plex-mono), 'Courier New', monospace;
+}
+
+.thb{color:var(--thb-ink);font-family:var(--thb-font-body);font-size:19px;line-height:1.6;max-width:900px;margin:0 auto;padding:0 24px 48px;box-sizing:border-box;}
+.thb h1,.thb h2,.thb h3{font-family:var(--thb-font-display);font-weight:800;color:var(--thb-ink);letter-spacing:-0.01em;line-height:1.1;}
+.thb h1{font-size:clamp(2.1rem,5vw,3.4rem);margin:0 0 0.5em;}
+.thb h2{font-size:clamp(1.5rem,3vw,2.1rem);margin:1.6em 0 0.6em;scroll-margin-top:90px;}
+.thb h3{font-size:1.3rem;margin:1.4em 0 0.5em;}
+.thb p{margin:0 0 1.1em;}
+.thb a{color:var(--thb-pine);text-decoration-thickness:2px;text-underline-offset:3px;}
+.thb a:hover{color:var(--thb-cedar-ink);}
+.thb strong{color:var(--thb-ink);}
+
+/* Eyebrow label — spec-sheet style tag that opens a section */
+.thb-eyebrow{display:inline-flex;align-items:center;gap:.5em;font-family:var(--thb-font-mono);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--thb-forest);margin-bottom:.9em;}
+.thb-eyebrow::before{content:"";width:8px;height:8px;background:var(--thb-spring);border:1.5px solid var(--thb-forest);border-radius:1px;}
+
+/* Divider — the one recurring signature: a dimension-line rule with tick marks */
+.thb-divider{border:0;height:1px;background:var(--thb-line);margin:2.6em 0;position:relative;}
+.thb-divider::before,.thb-divider::after{content:"";position:absolute;top:-3px;width:1px;height:7px;background:var(--thb-line);}
+.thb-divider::before{left:0;}
+.thb-divider::after{right:0;}
+
+/* Badges — small mono spec tags (commission, sq ft, license, pending states) */
+.thb-badge-row{display:flex;flex-wrap:wrap;gap:.6em;margin:1em 0 1.6em;}
+.thb-badge{font-family:var(--thb-font-mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;padding:.5em .9em;border:1.5px solid var(--thb-pine);color:var(--thb-forest);border-radius:3px;background:var(--thb-white);}
+.thb-badge--solid{background:var(--thb-forest);border-color:var(--thb-forest);color:var(--thb-white);}
+.thb-badge--cedar{border-color:var(--thb-cedar);color:var(--thb-cedar-ink);border-style:dashed;}
+
+/* Cards — builder spotlight teasers */
+.thb-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.4em;margin:1.6em 0 2.2em;}
+.thb-card{background:var(--thb-white);border:1.5px solid var(--thb-line);border-top:4px solid var(--thb-pine);border-radius:4px;padding:1.5em 1.4em;transition:transform .15s ease,box-shadow .15s ease;}
+.thb-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(16,25,15,.1);}
+.thb-card h3{margin-top:0;font-size:1.15rem;}
+.thb-card p{font-size:.98rem;margin-bottom:.8em;}
+.thb-card a{font-family:var(--thb-font-mono);font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;}
+
+/* Panels — colored callout blocks */
+.thb-panel{background:var(--thb-mint);border-radius:6px;padding:1.6em 1.8em;margin:1.6em 0;}
+.thb-panel--dark{background:var(--thb-forest);color:var(--thb-white);}
+.thb-panel--dark h2,.thb-panel--dark h3{color:var(--thb-white);}
+.thb-panel--dark a{color:var(--thb-spring);}
+
+/* Stat blocks — used in the cost-guide teaser banner and the cost guide page */
+.thb-stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1.4em;margin:1em 0;}
+.thb-stat .thb-stat-num{display:block;font-family:var(--thb-font-mono);font-weight:700;font-size:1.7rem;color:var(--thb-spring);}
+.thb-stat .thb-stat-label{display:block;font-size:.85rem;opacity:.85;margin-top:.2em;}
+
+/* Spec table — cost guide breakdown */
+.thb-spec-table{border:1.5px solid var(--thb-line);border-radius:6px;overflow:hidden;margin:1.6em 0;}
+.thb-spec-row{display:grid;grid-template-columns:1fr auto;gap:1em;padding:1.1em 1.4em;border-bottom:1px solid var(--thb-line);align-items:baseline;}
+.thb-spec-row:last-child{border-bottom:0;}
+.thb-spec-row:nth-child(odd){background:var(--thb-mint);}
+.thb-spec-row .thb-spec-name{font-weight:700;}
+.thb-spec-row .thb-spec-value{font-family:var(--thb-font-mono);font-weight:700;color:var(--thb-forest);white-space:nowrap;}
+
+/* CTA buttons */
+.thb-cta{display:inline-block;font-family:var(--thb-font-mono);font-size:.85rem;letter-spacing:.05em;text-transform:uppercase;padding:.85em 1.5em;background:var(--thb-pine);color:var(--thb-white)!important;border-radius:4px;text-decoration:none!important;margin:.3em 0;}
+.thb-cta:hover{background:var(--thb-forest);}
+.thb-cta--pending{background:none;border:1.5px dashed var(--thb-cedar);color:var(--thb-cedar-ink)!important;}
+.thb-cta--pending:hover{background:var(--thb-cedar);color:var(--thb-white)!important;border-style:solid;}
+
+/* Photo placeholder — framed viewport, not an illustration */
+.thb-photo-pending{border:1.5px dashed var(--thb-line);border-radius:6px;padding:2.2em 1.4em;text-align:center;font-family:var(--thb-font-mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:#7c8c7e;margin:1.4em 0;}
+
+/* Numbered steps — genuine sequence (About page methodology) */
+.thb-steps{list-style:none;margin:1.6em 0;padding:0;counter-reset:thb-step;}
+.thb-steps li{counter-increment:thb-step;position:relative;padding-left:2.6em;margin-bottom:1.3em;}
+.thb-steps li::before{content:counter(thb-step,decimal-leading-zero);position:absolute;left:0;top:0;font-family:var(--thb-font-mono);font-weight:700;color:var(--thb-pine);font-size:.95rem;}
+
+/* FAQ */
+.thb-faq-item{border-top:1.5px solid var(--thb-line);padding:1.4em 0;}
+.thb-faq-item:last-child{border-bottom:1.5px solid var(--thb-line);}
+.thb-faq-item h3{margin:0 0 .5em;font-size:1.15rem;}
+.thb-faq-item p{margin:0;}
+
+@media (max-width:600px){
+  .thb{font-size:17px;}
+  .thb-spec-row{grid-template-columns:1fr;gap:.2em;}
+}
