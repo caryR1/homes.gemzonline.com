@@ -90,6 +90,23 @@
 .thb-faq-item h3{margin:0 0 .5em;font-size:1.15rem;}
 .thb-faq-item p{margin:0;}
 
+/* Latest Posts block (homepage teaser + Blog archive) — restyle core blocks to match .thb-card */
+.thb .wp-block-latest-posts,
+.thb .wp-block-post-template{list-style:none;padding:0;margin:1.4em 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.4em;}
+.thb .wp-block-latest-posts li,
+.thb .wp-block-post-template > li{background:var(--thb-white);border:1.5px solid var(--thb-line);border-top:4px solid var(--thb-pine);border-radius:4px;padding:1.4em;list-style:none;}
+.thb .wp-block-latest-posts__post-title,
+.thb .wp-block-post-template h2{display:block;font-family:var(--thb-font-display);font-weight:800;font-size:1.1rem;color:var(--thb-ink);text-decoration:none;margin-bottom:.3em;}
+.thb .wp-block-latest-posts__post-title:hover,
+.thb .wp-block-post-template h2 a:hover{color:var(--thb-cedar-ink);}
+.thb .wp-block-post-template h2 a{color:var(--thb-ink);text-decoration:none;}
+.thb .wp-block-latest-posts__post-excerpt,
+.thb .wp-block-post-template .wp-block-post-excerpt{font-size:.95rem;margin-top:.4em;}
+.thb .wp-block-post-date,
+.thb .wp-block-post-template time{font-family:var(--thb-font-mono);font-size:.78rem;color:var(--thb-forest);text-transform:uppercase;letter-spacing:.05em;}
+.thb .wp-block-query-pagination{margin-top:1.6em;font-family:var(--thb-font-mono);font-size:.85rem;}
+.thb .wp-block-query-pagination a{color:var(--thb-pine);}
+
 @media (max-width:600px){
   .thb{font-size:17px;}
   .thb-spec-row{grid-template-columns:1fr;gap:.2em;}
