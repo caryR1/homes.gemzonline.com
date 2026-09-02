@@ -5,6 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class GAT_Redirect {
 
+	const COOKIE_NAME = 'gat_affiliate_code';
+	const COOKIE_DAYS = 180;
+
 	public static function init() {
 		add_action( 'init', array( __CLASS__, 'add_rewrite_rule' ) );
 		add_filter( 'query_vars', array( __CLASS__, 'add_query_var' ) );
@@ -52,6 +55,22 @@ class GAT_Redirect {
 		if ( ! $row || ! $row->active ) {
 			return; // Unknown or disabled code: let WP 404 normally.
 		}
+
+		// Last-touch attribution: overwrite any existing cookie unconditionally,
+		// so whichever code was clicked most recently is the one that counts,
+		// for up to COOKIE_DAYS. Simple overwrite is what makes this last-touch
+		// rather than first-touch — no extra logic needed.
+		setcookie(
+			self::COOKIE_NAME,
+			$row->code,
+			array(
+				'expires'  => time() + self::COOKIE_DAYS * DAY_IN_SECONDS,
+				'path'     => '/',
+				'secure'   => is_ssl(),
+				'httponly' => true,
+				'samesite' => 'Lax',
+			)
+		);
 
 		// Log the click regardless of whether a destination URL is set yet,
 		// so early testing/traffic is still captured.
