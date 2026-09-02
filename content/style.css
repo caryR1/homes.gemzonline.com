@@ -31,6 +31,15 @@
 .thb-eyebrow{display:inline-flex;align-items:center;gap:.5em;font-family:var(--thb-font-mono);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--thb-forest);margin-bottom:.9em;}
 .thb-eyebrow::before{content:"";width:8px;height:8px;background:var(--thb-spring);border:1.5px solid var(--thb-forest);border-radius:1px;}
 
+/* Hero — real photo background with dark overlay for white text contrast */
+.thb-hero{position:relative;border-radius:8px;overflow:hidden;background-size:cover;background-position:center;min-height:380px;display:flex;align-items:center;justify-content:center;text-align:center;margin:0 0 1.8em;}
+.thb-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,25,15,.35),rgba(16,25,15,.78));}
+.thb-hero-content{position:relative;z-index:1;padding:2.2em 1.6em;max-width:640px;}
+.thb-hero-content .thb-eyebrow{color:var(--thb-spring);justify-content:center;margin-bottom:1em;}
+.thb-hero-content .thb-eyebrow::before{background:var(--thb-spring);border-color:var(--thb-white);}
+.thb-hero h1{color:var(--thb-white);margin:0;}
+@media (max-width:600px){.thb-hero{min-height:320px;}}
+
 /* Divider — the one recurring signature: a dimension-line rule with tick marks */
 .thb-divider{border:0;height:1px;background:var(--thb-line);margin:2.6em 0;position:relative;}
 .thb-divider::before,.thb-divider::after{content:"";position:absolute;top:-3px;width:1px;height:7px;background:var(--thb-line);}
