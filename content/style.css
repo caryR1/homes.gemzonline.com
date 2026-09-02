@@ -44,8 +44,9 @@
 .thb-badge--cedar{border-color:var(--thb-cedar);color:var(--thb-cedar-ink);border-style:dashed;}
 
 /* Cards — builder spotlight teasers */
-.thb-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.4em;margin:1.6em 0 2.2em;}
-.thb-card{background:var(--thb-white);border:1.5px solid var(--thb-line);border-top:4px solid var(--thb-pine);border-radius:4px;padding:1.5em 1.4em;transition:transform .15s ease,box-shadow .15s ease;}
+.thb-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.4em;margin:1.6em 0 2.2em;align-items:stretch;}
+.thb-card{background:var(--thb-white);border:1.5px solid var(--thb-line);border-top:4px solid var(--thb-pine);border-radius:4px;padding:1.5em 1.4em;transition:transform .15s ease,box-shadow .15s ease;display:flex;flex-direction:column;height:100%;box-sizing:border-box;}
+.thb-card>a:last-child{margin-top:auto;padding-top:.6em;}
 .thb-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(16,25,15,.1);}
 .thb-card h3{margin-top:0;font-size:1.15rem;}
 .thb-card p{font-size:.98rem;margin-bottom:.8em;}
@@ -90,11 +91,14 @@
 .thb-faq-item h3{margin:0 0 .5em;font-size:1.15rem;}
 .thb-faq-item p{margin:0;}
 
-/* Latest Posts block (homepage teaser + Blog archive) — restyle core blocks to match .thb-card */
+/* Latest Posts block (homepage teaser + Blog archive) — restyle core blocks to match .thb-card
+   align-items:stretch + flex column on each card is what keeps row tops aligned: without it,
+   each <li> only grows to its own excerpt length and the next row starts at a different height
+   per column. */
 .thb .wp-block-latest-posts,
-.thb .wp-block-post-template{list-style:none;padding:0;margin:1.4em 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.4em;}
+.thb .wp-block-post-template{list-style:none;padding:0;margin:1.4em 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.4em;align-items:stretch;}
 .thb .wp-block-latest-posts li,
-.thb .wp-block-post-template > li{background:var(--thb-white);border:1.5px solid var(--thb-line);border-top:4px solid var(--thb-pine);border-radius:4px;padding:1.4em;list-style:none;}
+.thb .wp-block-post-template > li{background:var(--thb-white);border:1.5px solid var(--thb-line);border-top:4px solid var(--thb-pine);border-radius:4px;padding:1.4em;list-style:none;display:flex;flex-direction:column;height:100%;box-sizing:border-box;margin:0!important;}
 .thb .wp-block-latest-posts__post-title,
 .thb .wp-block-post-template h2{display:block;font-family:var(--thb-font-display);font-weight:800;font-size:1.1rem;color:var(--thb-ink);text-decoration:none;margin-bottom:.3em;}
 .thb .wp-block-latest-posts__post-title:hover,
