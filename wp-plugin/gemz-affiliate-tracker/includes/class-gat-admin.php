@@ -14,6 +14,8 @@ class GAT_Admin {
 		add_action( 'admin_post_gat_delete_code', array( __CLASS__, 'handle_delete_code' ) );
 		add_action( 'admin_post_gat_calculate_payout', array( __CLASS__, 'handle_calculate_payout' ) );
 		add_action( 'admin_post_gat_delete_payout', array( __CLASS__, 'handle_delete_payout' ) );
+		add_action( 'admin_post_gat_approve_affiliate', array( __CLASS__, 'handle_approve_affiliate' ) );
+		add_action( 'admin_post_gat_reject_affiliate', array( __CLASS__, 'handle_reject_affiliate' ) );
 	}
 
 	public static function add_menu() {
@@ -21,16 +23,17 @@ class GAT_Admin {
 			'Affiliate Tracker',
 			'Affiliate Tracker',
 			self::CAP,
-			'gat-codes',
-			array( __CLASS__, 'render_codes_page' ),
+			'gat-affiliates',
+			array( __CLASS__, 'render_affiliates_page' ),
 			'dashicons-randomize',
 			58
 		);
-		add_submenu_page( 'gat-codes', 'Sub-Affiliate Codes', 'Codes', self::CAP, 'gat-codes', array( __CLASS__, 'render_codes_page' ) );
-		add_submenu_page( 'gat-codes', 'Partners', 'Partners', self::CAP, 'gat-partners', array( __CLASS__, 'render_partners_page' ) );
-		add_submenu_page( 'gat-codes', 'Click Log', 'Click Log', self::CAP, 'gat-clicks', array( __CLASS__, 'render_clicks_page' ) );
-		add_submenu_page( 'gat-codes', 'Payout Calculator', 'Payout Calculator', self::CAP, 'gat-calculator', array( __CLASS__, 'render_calculator_page' ) );
-		add_submenu_page( 'gat-codes', 'Payout Ledger', 'Payout Ledger', self::CAP, 'gat-ledger', array( __CLASS__, 'render_ledger_page' ) );
+		add_submenu_page( 'gat-affiliates','Affiliates', 'Affiliates', self::CAP, 'gat-affiliates', array( __CLASS__, 'render_affiliates_page' ) );
+		add_submenu_page( 'gat-affiliates','Sub-Affiliate Codes', 'Codes', self::CAP, 'gat-codes', array( __CLASS__, 'render_codes_page' ) );
+		add_submenu_page( 'gat-affiliates','Partners', 'Partners', self::CAP, 'gat-partners', array( __CLASS__, 'render_partners_page' ) );
+		add_submenu_page( 'gat-affiliates','Click Log', 'Click Log', self::CAP, 'gat-clicks', array( __CLASS__, 'render_clicks_page' ) );
+		add_submenu_page( 'gat-affiliates','Payout Calculator', 'Payout Calculator', self::CAP, 'gat-calculator', array( __CLASS__, 'render_calculator_page' ) );
+		add_submenu_page( 'gat-affiliates','Payout Ledger', 'Payout Ledger', self::CAP, 'gat-ledger', array( __CLASS__, 'render_ledger_page' ) );
 	}
 
 	private static function wrap_start( $title ) {
@@ -65,6 +68,151 @@ class GAT_Admin {
 	private static function get_code( $id ) {
 		global $wpdb;
 		return $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . GAT_DB::table( 'codes' ) . ' WHERE id = %d', $id ) );
+	}
+
+	/* ---------------------------------------------------------------- *
+	 * AFFILIATES (self-signups)
+	 * ---------------------------------------------------------------- */
+
+	public static function render_affiliates_page() {
+		if ( ! current_user_can( self::CAP ) ) {
+			return;
+		}
+		self::wrap_start( 'Affiliates' );
+
+		if ( isset( $_GET['approved'] ) ) {
+			echo '<div class="notice notice-success"><p>Affiliate approved &mdash; their link is now live.</p></div>';
+		}
+		if ( isset( $_GET['rejected'] ) ) {
+			echo '<div class="notice notice-success"><p>Affiliate rejected.</p></div>';
+		}
+
+		global $wpdb;
+		$codes_table    = GAT_DB::table( 'codes' );
+		$partners_table = GAT_DB::table( 'partners' );
+
+		$rows = $wpdb->get_results(
+			"SELECT c.*, p.name AS partner_name FROM {$codes_table} c
+			 LEFT JOIN {$partners_table} p ON p.id = c.partner_id
+			 WHERE c.wp_user_id IS NOT NULL
+			 ORDER BY (c.status = 'pending') DESC, c.created_at DESC"
+		);
+
+		if ( ! $rows ) {
+			echo '<p>No self-signup affiliates yet. New signups from the "Become an Affiliate" page will show up here.</p>';
+			self::wrap_end();
+			return;
+		}
+
+		echo '<table class="widefat striped"><thead><tr><th>Name</th><th>Email</th><th>Partner</th><th>Code</th><th>Status</th><th>Payment info</th><th>Set cut &amp; action</th></tr></thead><tbody>';
+		foreach ( $rows as $r ) {
+			$user = get_userdata( $r->wp_user_id );
+			$email = $user ? $user->user_email : '(deleted user)';
+			$payment = $r->wp_user_id ? get_user_meta( $r->wp_user_id, 'gat_payment_details', true ) : '';
+
+			echo '<tr>';
+			echo '<td>' . esc_html( $r->sub_affiliate_name ) . '</td>';
+			echo '<td>' . esc_html( $email ) . '</td>';
+			echo '<td>' . esc_html( $r->partner_name ) . '</td>';
+			echo '<td><code>' . esc_html( $r->code ) . '</code></td>';
+			echo '<td>' . esc_html( $r->status ) . '</td>';
+			echo '<td>' . ( $payment ? esc_html( $payment ) : '<em>not set</em>' ) . '</td>';
+			echo '<td>';
+
+			if ( 'pending' === $r->status ) {
+				echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" style="margin-bottom:6px;">';
+				wp_nonce_field( 'gat_approve_affiliate_' . $r->id );
+				echo '<input type="hidden" name="action" value="gat_approve_affiliate">';
+				echo '<input type="hidden" name="id" value="' . esc_attr( $r->id ) . '">';
+				echo '<select name="cut_type" style="width:auto;display:inline-block;">';
+				echo '<option value="percent">%</option><option value="flat">$ flat</option>';
+				echo '</select> ';
+				echo '<input type="number" step="0.01" min="0" name="cut_value" placeholder="e.g. 50" style="width:80px;" required> ';
+				echo '<button type="submit" class="button button-primary button-small">Approve</button>';
+				echo '</form>';
+
+				$reject_url = wp_nonce_url( admin_url( 'admin-post.php?action=gat_reject_affiliate&id=' . $r->id ), 'gat_reject_affiliate_' . $r->id );
+				echo '<a href="' . esc_url( $reject_url ) . '" class="button button-small" onclick="return confirm(\'Reject this affiliate?\');">Reject</a>';
+			} else {
+				echo '<a href="' . esc_url( admin_url( 'admin.php?page=gat-codes&edit=' . $r->id ) ) . '">Edit code / rate</a>';
+			}
+
+			echo '</td>';
+			echo '</tr>';
+		}
+		echo '</tbody></table>';
+
+		self::wrap_end();
+	}
+
+	public static function handle_approve_affiliate() {
+		if ( ! current_user_can( self::CAP ) ) {
+			wp_die( 'Not allowed.' );
+		}
+		$id = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
+		check_admin_referer( 'gat_approve_affiliate_' . $id );
+
+		$cut_type  = isset( $_POST['cut_type'] ) && 'flat' === $_POST['cut_type'] ? 'flat' : 'percent';
+		$cut_value = isset( $_POST['cut_value'] ) ? (float) $_POST['cut_value'] : 0;
+
+		$code = self::get_code( $id );
+		if ( ! $code ) {
+			wp_die( 'Code not found.' );
+		}
+
+		global $wpdb;
+		$wpdb->update(
+			GAT_DB::table( 'codes' ),
+			array(
+				'status'    => 'active',
+				'active'    => 1,
+				'cut_type'  => $cut_type,
+				'cut_value' => $cut_value,
+			),
+			array( 'id' => $id )
+		);
+
+		if ( $code->wp_user_id ) {
+			update_user_meta( $code->wp_user_id, 'gat_status', 'active' );
+			$user = get_userdata( $code->wp_user_id );
+			if ( $user ) {
+				wp_mail(
+					$user->user_email,
+					'Your affiliate account is approved',
+					"Good news, {$user->display_name} — your affiliate account has been approved and your link is live.\n\nLog in to your dashboard to see your link and stats."
+				);
+			}
+		}
+
+		wp_safe_redirect( admin_url( 'admin.php?page=gat-affiliates&approved=1' ) );
+		exit;
+	}
+
+	public static function handle_reject_affiliate() {
+		if ( ! current_user_can( self::CAP ) ) {
+			wp_die( 'Not allowed.' );
+		}
+		$id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
+		check_admin_referer( 'gat_reject_affiliate_' . $id );
+
+		$code = self::get_code( $id );
+		if ( ! $code ) {
+			wp_die( 'Code not found.' );
+		}
+
+		global $wpdb;
+		$wpdb->update(
+			GAT_DB::table( 'codes' ),
+			array( 'status' => 'rejected', 'active' => 0 ),
+			array( 'id' => $id )
+		);
+
+		if ( $code->wp_user_id ) {
+			update_user_meta( $code->wp_user_id, 'gat_status', 'rejected' );
+		}
+
+		wp_safe_redirect( admin_url( 'admin.php?page=gat-affiliates&rejected=1' ) );
+		exit;
 	}
 
 	/* ---------------------------------------------------------------- *

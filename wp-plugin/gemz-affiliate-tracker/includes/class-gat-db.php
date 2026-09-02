@@ -13,6 +13,7 @@ class GAT_DB {
 	public static function activate() {
 		self::create_tables();
 		self::seed_partners();
+		GAT_Roles::add_role();
 		update_option( 'gat_db_version', GAT_DB_VERSION );
 
 		// Rewrite rule needs to exist before we flush.
@@ -24,6 +25,7 @@ class GAT_DB {
 		if ( get_option( 'gat_db_version' ) !== GAT_DB_VERSION ) {
 			self::create_tables();
 			self::seed_partners();
+			GAT_Roles::add_role();
 			update_option( 'gat_db_version', GAT_DB_VERSION );
 		}
 	}
@@ -58,6 +60,8 @@ class GAT_DB {
 			code VARCHAR(64) NOT NULL,
 			sub_affiliate_name VARCHAR(191) NOT NULL,
 			partner_id BIGINT UNSIGNED NOT NULL,
+			wp_user_id BIGINT UNSIGNED NULL,
+			status VARCHAR(20) NOT NULL DEFAULT 'active',
 			cut_type VARCHAR(20) NOT NULL DEFAULT 'percent',
 			cut_value DECIMAL(10,2) NOT NULL DEFAULT 0,
 			active TINYINT(1) NOT NULL DEFAULT 1,
@@ -65,7 +69,8 @@ class GAT_DB {
 			created_at DATETIME NOT NULL,
 			PRIMARY KEY  (id),
 			UNIQUE KEY code (code),
-			KEY partner_id (partner_id)
+			KEY partner_id (partner_id),
+			KEY wp_user_id (wp_user_id)
 		) {$charset_collate};
 
 		CREATE TABLE {$clicks} (

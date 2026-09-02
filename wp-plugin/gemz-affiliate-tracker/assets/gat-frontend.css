@@ -1,0 +1,14 @@
+.gat-form{max-width:480px;font-size:16px;}
+.gat-form label{font-weight:600;}
+.gat-input{width:100%;padding:.6em .7em;margin-top:.3em;border:1.5px solid #CFE3D2;border-radius:4px;font-size:1em;box-sizing:border-box;}
+.gat-button{background:#3F8353;color:#fff;border:none;padding:.7em 1.4em;border-radius:4px;font-size:1em;cursor:pointer;}
+.gat-button:hover{background:#193421;}
+.gat-fineprint{font-size:.85em;opacity:.75;}
+.gat-notice{background:#E4F6E2;border-radius:6px;padding:1em 1.2em;margin-bottom:1.2em;}
+.gat-notice-success{background:#E4F6E2;}
+.gat-notice-error{background:#fbeaea;color:#7a1f1f;}
+.gat-dashboard h2{margin-top:1.6em;}
+.gat-code-card{border:1.5px solid #CFE3D2;border-radius:6px;padding:1em 1.2em;margin-bottom:1em;}
+.gat-stat-row{display:flex;gap:1.5em;margin-top:.6em;}
+.gat-stat-num{display:block;font-weight:700;font-size:1.4em;}
+.gat-stat-label{display:block;font-size:.8em;opacity:.75;}
