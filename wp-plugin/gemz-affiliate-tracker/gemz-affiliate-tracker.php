@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'GAT_VERSION', '2.0.0' );
-define( 'GAT_DB_VERSION', '2' );
+define( 'GAT_VERSION', '2.1.0' );
+define( 'GAT_DB_VERSION', '3' );
 define( 'GAT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'GAT_PLUGIN_FILE', __FILE__ );
 

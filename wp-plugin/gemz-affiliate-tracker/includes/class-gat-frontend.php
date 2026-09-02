@@ -101,7 +101,7 @@ class GAT_Frontend {
 		ob_start();
 
 		if ( isset( $_GET['gat_signup'] ) && 'success' === $_GET['gat_signup'] ) {
-			echo '<div class="gat-notice gat-notice-success"><p>Thanks for signing up! Your account is pending approval. Once approved, your affiliate link and dashboard will be active.</p><p><a href="' . esc_url( self::dashboard_url() ) . '">Go to your dashboard &rarr;</a></p></div>';
+			echo '<div class="gat-notice gat-notice-success"><p>You\'re in! Your affiliate link is live now.</p><p><a href="' . esc_url( self::dashboard_url() ) . '">Go to your dashboard &rarr;</a></p></div>';
 			return ob_get_clean();
 		}
 
@@ -202,11 +202,16 @@ class GAT_Frontend {
 			$fail( 'Could not create account: ' . $user_id->get_error_message() );
 		}
 
-		update_user_meta( $user_id, 'gat_status', 'pending' );
+		update_user_meta( $user_id, 'gat_status', 'active' );
 
 		$code = self::generate_unique_code( $name );
 
 		global $wpdb;
+		$partners_table = GAT_DB::table( 'partners' );
+		$partner        = $wpdb->get_row( $wpdb->prepare( "SELECT default_cut_type, default_cut_value FROM {$partners_table} WHERE id = %d", $partner_id ) );
+		$cut_type       = $partner && 'flat' === $partner->default_cut_type ? 'flat' : 'percent';
+		$cut_value      = $partner ? (float) $partner->default_cut_value : 0;
+
 		$wpdb->insert(
 			GAT_DB::table( 'codes' ),
 			array(
@@ -214,24 +219,24 @@ class GAT_Frontend {
 				'sub_affiliate_name' => $name,
 				'partner_id'         => $partner_id,
 				'wp_user_id'         => $user_id,
-				'status'             => 'pending',
-				'cut_type'           => 'percent',
-				'cut_value'          => 0,
-				'active'             => 0,
-				'notes'              => 'Self-signup, pending approval. Set the real cut rate before approving.',
+				'status'             => 'active',
+				'cut_type'           => $cut_type,
+				'cut_value'          => $cut_value,
+				'active'             => 1,
+				'notes'              => 'Self-signup, live immediately at the partner\'s default cut rate.',
 				'created_at'         => current_time( 'mysql' ),
 			)
 		);
 
-		// Log them in so their dashboard shows "pending" immediately.
+		// Log them in so their dashboard is ready immediately.
 		wp_set_current_user( $user_id );
 		wp_set_auth_cookie( $user_id );
 
 		// Notify the site admin.
 		wp_mail(
 			get_option( 'admin_email' ),
-			'New affiliate signup: ' . $name,
-			"A new affiliate signed up and is pending approval.\n\nName: {$name}\nEmail: {$email}\nCode: {$code}\n\nReview and approve in wp-admin under Affiliate Tracker > Affiliates."
+			'New affiliate joined: ' . $name,
+			"A new affiliate signed up and is live immediately.\n\nName: {$name}\nEmail: {$email}\nCode: {$code}\nCut rate applied: " . ( 'flat' === $cut_type ? '$' . number_format( $cut_value, 2 ) . ' flat' : $cut_value . '%' ) . "\n\nYou can suspend them or adjust their rate anytime in wp-admin under Affiliate Tracker > Affiliates."
 		);
 
 		wp_safe_redirect( add_query_arg( 'gat_signup', 'success', self::signup_url() ) );
@@ -314,10 +319,8 @@ class GAT_Frontend {
 		echo '<div class="gat-dashboard">';
 		echo '<p>Welcome back, ' . esc_html( $user->display_name ) . '. <a href="' . esc_url( wp_logout_url( self::dashboard_url() ) ) . '">Log out</a></p>';
 
-		if ( 'pending' === $status ) {
-			echo '<div class="gat-notice">Your account is pending approval. Your link will start working once approved &mdash; check back soon.</div>';
-		} elseif ( 'rejected' === $status ) {
-			echo '<div class="gat-notice gat-notice-error">Your affiliate application was not approved. Contact us if you have questions.</div>';
+		if ( 'suspended' === $status ) {
+			echo '<div class="gat-notice gat-notice-error">Your affiliate account is currently suspended and your link is inactive. Contact us if you have questions.</div>';
 		}
 
 		self::render_stats_section( $user_id );
@@ -457,12 +460,12 @@ class GAT_Frontend {
 		$existing = get_user_meta( $user_id, 'gat_payment_details', true );
 		?>
 		<h2>Payment information</h2>
-		<p class="gat-fineprint">Tell us how you'd like to be paid &mdash; PayPal email, Venmo, Zelle, etc. Do not enter full bank account or card numbers here.</p>
+		<p class="gat-fineprint">Tell us how you'd like to be paid &mdash; PayPal, Venmo, Zelle, bank transfer details, whatever's easiest for you.</p>
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="gat-form">
 			<?php wp_nonce_field( 'gat_save_payment_info' ); ?>
 			<input type="hidden" name="action" value="gat_save_payment_info">
 			<p>
-				<textarea name="payment_details" rows="3" class="gat-input" placeholder="e.g. PayPal: name@example.com"><?php echo esc_textarea( $existing ); ?></textarea>
+				<textarea name="payment_details" rows="4" class="gat-input" placeholder="e.g. PayPal: name@example.com, or bank transfer details"><?php echo esc_textarea( $existing ); ?></textarea>
 			</p>
 			<p><button type="submit" class="gat-button">Save</button></p>
 		</form>

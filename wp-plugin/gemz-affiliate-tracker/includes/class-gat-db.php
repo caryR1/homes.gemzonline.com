@@ -48,6 +48,8 @@ class GAT_DB {
 			payout_amount DECIMAL(10,2) NULL,
 			payout_percent DECIMAL(5,2) NULL,
 			installments_json TEXT NULL,
+			default_cut_type VARCHAR(20) NOT NULL DEFAULT 'percent',
+			default_cut_value DECIMAL(10,2) NOT NULL DEFAULT 0,
 			destination_url VARCHAR(500) NULL,
 			notes TEXT NULL,
 			created_at DATETIME NOT NULL,
