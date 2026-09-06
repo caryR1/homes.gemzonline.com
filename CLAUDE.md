@@ -8,6 +8,16 @@ bug reports/feature requests worked well as a coordination pattern — see
 `reference_gemz_plugin_swap_file` and `project_tiny_homes_affiliate_site` in this
 session's memory for the history.
 
+**Three-party structure (refined same day):** Cary is the **client** — he sets goals
+and priorities but shouldn't need to track plugin internals or implementation
+detail. This session is the **PM** — probes Cary for actual requirements, applies
+judgment/best-practice on approach, translates goals into concrete backlog items,
+relays Solar's technical proposals back to Cary in plain terms for real decisions,
+and tracks status. Solar's session is the **implementer** — owns how the plugin is
+actually built. This session does not implement plugin code itself and should not
+hand plugin implementation work to Cary — only Homes' own site content/config (a
+separate, unrelated scope) is still done directly here.
+
 ## What this means in practice
 
 - **Propose work, don't just react.** When plugin gaps, bugs, or incomplete features
