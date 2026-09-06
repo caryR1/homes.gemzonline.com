@@ -89,6 +89,10 @@
 /* Photo placeholder — framed viewport, not an illustration */
 .thb-photo-pending{border:1.5px dashed var(--thb-line);border-radius:6px;padding:2.2em 1.4em;text-align:center;font-family:var(--thb-font-mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:#7c8c7e;margin:1.4em 0;}
 
+/* Builder spotlight photo */
+.thb-photo{width:100%;height:auto;border-radius:8px;margin:1.4em 0;display:block;border:1.5px solid var(--thb-line);}
+.thb-photo-caption{font-family:var(--thb-font-mono);font-size:.78rem;color:var(--thb-forest);text-align:center;margin-top:-1em;margin-bottom:1.4em;}
+
 /* Numbered steps — genuine sequence (About page methodology) */
 .thb-steps{list-style:none;margin:1.6em 0;padding:0;counter-reset:thb-step;}
 .thb-steps li{counter-increment:thb-step;position:relative;padding-left:2.6em;margin-bottom:1.3em;}
