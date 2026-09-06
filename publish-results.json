@@ -64,5 +64,17 @@
     "status": "published",
     "link": "https://homes.gemzonline.com/faq/",
     "id": 55
+  },
+  {
+    "title": "Become an Affiliate",
+    "status": "published",
+    "link": "https://homes.gemzonline.com/become-an-affiliate/",
+    "id": 104
+  },
+  {
+    "title": "My Account",
+    "status": "published",
+    "link": "https://homes.gemzonline.com/my-account/",
+    "id": 26
   }
 ]
