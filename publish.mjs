@@ -22,6 +22,8 @@ const items = [
   { type: 'posts', id: 41, title: 'Tiny Home vs ADU vs Modular Family Home: Which Is Right for You', file: 'content/posts/tiny-home-vs-adu.html' },
   { type: 'pages', id: 54, title: 'About', file: 'content/pages/about.html' },
   { type: 'pages', id: 55, title: 'FAQ', file: 'content/pages/faq.html' },
+  { type: 'pages', id: 104, title: 'Become an Affiliate', file: 'content/pages/become-an-affiliate.html' },
+  { type: 'pages', id: 26, title: 'My Account', file: 'content/pages/my-account.html' },
 ];
 
 const results = [];

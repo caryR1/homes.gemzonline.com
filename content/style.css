@@ -23,6 +23,7 @@
 .thb h2{font-size:clamp(1.5rem,3vw,2.1rem);margin:1.6em 0 0.6em;scroll-margin-top:90px;}
 .thb h3{font-size:1.3rem;margin:1.4em 0 0.5em;}
 .thb p{margin:0 0 1.1em;}
+.thb-fineprint{font-size:.85rem;opacity:.75;margin:-.4em 0 1em;}
 .thb a{color:var(--thb-pine);text-decoration-thickness:2px;text-underline-offset:3px;}
 .thb a:hover{color:var(--thb-cedar-ink);}
 .thb strong{color:var(--thb-ink);}
