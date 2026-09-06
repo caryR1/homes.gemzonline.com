@@ -68,7 +68,16 @@
 <hr class="thb-divider">
 
 <h2 id="blog">From the Blog</h2>
-<!-- wp:latest-posts {"postsToShow":3,"displayPostContent":true,"displayPostContentRadio":"excerpt","excerptLength":18,"displayFeaturedImage":false,"addLinkToFeaturedImage":false,"order":"desc","orderBy":"date"} /-->
+<!-- wp:query {"query":{"perPage":3,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false}} -->
+<div class="wp-block-query">
+<!-- wp:post-template -->
+<!-- wp:post-featured-image {"isLink":true,"height":"170px"} /-->
+<!-- wp:post-title {"level":2,"isLink":true} /-->
+<!-- wp:post-date /-->
+<!-- wp:post-excerpt {"moreText":"Read more","excerptLength":18} /-->
+<!-- /wp:post-template -->
+</div>
+<!-- /wp:query -->
 <p><a href="/blog/">Read all posts &rarr;</a></p>
 
 <hr class="thb-divider">
