@@ -113,14 +113,13 @@
 .thb-faq-item h3{margin:0 0 .5em;font-size:1.15rem;}
 .thb-faq-item p{margin:0;}
 
-/* Latest Posts block (homepage teaser + Blog archive) — restyle core blocks to match .thb-card
-   align-items:stretch + flex column on each card is what keeps row tops aligned: without it,
-   each <li> only grows to its own excerpt length and the next row starts at a different height
-   per column. */
+/* Latest Posts block (homepage teaser + Blog archive) — restyle core blocks to match .thb-card.
+   Flex+wrap+justify-content:center (not CSS grid auto-fit) so a leftover card in an incomplete
+   wrapped row centers itself instead of sticking to the left — same fix as .thb-card-grid. */
 .thb .wp-block-latest-posts,
-.thb .wp-block-post-template{list-style:none;padding:0;margin:1.4em 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.4em;align-items:stretch;}
+.thb .wp-block-post-template{list-style:none;padding:0;margin:1.4em 0;display:flex;flex-wrap:wrap;justify-content:center;gap:1.4em;}
 .thb .wp-block-latest-posts li,
-.thb .wp-block-post-template > li{background:var(--thb-white);border:1.5px solid var(--thb-line);border-top:4px solid var(--thb-pine);border-radius:4px;padding:1.4em;list-style:none;display:flex;flex-direction:column;height:100%;box-sizing:border-box;margin:0!important;}
+.thb .wp-block-post-template > li{background:var(--thb-white);border:1.5px solid var(--thb-line);border-top:4px solid var(--thb-pine);border-radius:4px;padding:1.4em;list-style:none;display:flex;flex-direction:column;flex:1 1 260px;max-width:340px;box-sizing:border-box;margin:0!important;}
 .thb .wp-block-latest-posts__featured-image,
 .thb .wp-block-post-featured-image{display:block;margin:0 0 .8em;}
 .thb .wp-block-latest-posts__featured-image img,
