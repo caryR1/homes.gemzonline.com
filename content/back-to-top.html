@@ -1,0 +1,17 @@
+<a href="#" class="thb-back-to-top" id="thb-back-to-top" aria-label="Back to top">&uarr;</a>
+<script>
+(function() {
+	var btn = document.getElementById('thb-back-to-top');
+	if (!btn) return;
+	function toggle() {
+		if (window.scrollY > 600) { btn.classList.add('is-visible'); }
+		else { btn.classList.remove('is-visible'); }
+	}
+	window.addEventListener('scroll', toggle, { passive: true });
+	toggle();
+	btn.addEventListener('click', function(e) {
+		e.preventDefault();
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	});
+})();
+</script>

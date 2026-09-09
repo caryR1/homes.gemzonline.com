@@ -13,15 +13,20 @@ const auth = 'Basic ' + Buffer.from(`${creds.username}:${creds.app_password}`).t
 const css = readFileSync('content/style.css', 'utf8');
 const styleBlock = `<!-- wp:html -->\n<style>${css}</style>\n<!-- /wp:html -->\n`;
 
+const backToTop = readFileSync('content/back-to-top.html', 'utf8');
+const backToTopBlock = `<!-- wp:html -->\n${backToTop}<!-- /wp:html -->\n`;
+
 const headerRes = await fetch(`${site}/wp-json/wp/v2/template-parts/hostinger-ai-theme%2F%2Fheader`, {
   headers: { Authorization: auth },
 });
 const header = await headerRes.json();
 const existing = header.content.raw;
 
-// Remove any previously-injected style block (idempotent re-runs), then prepend fresh one
-const stripped = existing.replace(/<!-- wp:html -->\n<style>[\s\S]*?<\/style>\n<!-- \/wp:html -->\n/, '');
-const newContent = styleBlock + stripped;
+// Remove any previously-injected style/back-to-top blocks (idempotent re-runs), then prepend fresh ones
+const stripped = existing
+  .replace(/<!-- wp:html -->\n<style>[\s\S]*?<\/style>\n<!-- \/wp:html -->\n/, '')
+  .replace(/<!-- wp:html -->\n<a href="#" class="thb-back-to-top"[\s\S]*?<\/script>\n<!-- \/wp:html -->\n/, '');
+const newContent = styleBlock + backToTopBlock + stripped;
 
 const putRes = await fetch(`${site}/wp-json/wp/v2/template-parts/hostinger-ai-theme%2F%2Fheader`, {
   method: 'POST',

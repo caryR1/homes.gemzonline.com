@@ -140,3 +140,9 @@
   .thb{font-size:17px;}
   .thb-spec-row{grid-template-columns:1fr;gap:.2em;}
 }
+
+/* Back-to-top — floating button, appears after scrolling past one viewport */
+.thb-back-to-top{position:fixed;bottom:2em;right:2em;width:44px;height:44px;border-radius:50%;background:var(--thb-forest);color:var(--thb-white);display:flex;align-items:center;justify-content:center;font-size:1.3rem;line-height:1;text-decoration:none!important;box-shadow:0 4px 14px rgba(16,25,15,.25);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease,visibility .25s;z-index:9999;}
+.thb-back-to-top.is-visible{opacity:1;visibility:visible;transform:translateY(0);}
+.thb-back-to-top:hover{background:var(--thb-pine);}
+@media (max-width:600px){.thb-back-to-top{bottom:1.2em;right:1.2em;width:40px;height:40px;font-size:1.1rem;}}
