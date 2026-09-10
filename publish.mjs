@@ -24,6 +24,7 @@ const items = [
   { type: 'pages', id: 55, title: 'FAQ', file: 'content/pages/faq.html' },
   { type: 'pages', id: 104, title: 'Become an Affiliate', file: 'content/pages/become-an-affiliate.html' },
   { type: 'pages', id: 26, title: 'My Account', file: 'content/pages/my-account.html' },
+  { type: 'pages', id: 245, title: 'Affiliate / Referral Partner Agreement', file: 'content/pages/affiliate-agreement.html' },
 ];
 
 const results = [];
